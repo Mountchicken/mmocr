@@ -7,7 +7,7 @@ import torch.nn as nn
 from mmcv.cnn.bricks.transformer import BaseTransformerLayer
 from mmengine.model import ModuleList
 
-from mmocr.data import TextRecogDataSample
+from mmocr.structures import TextRecogDataSample
 from mmocr.models.common.modules import PositionalEncoding
 from mmocr.models.textrecog.dictionary import Dictionary
 from mmocr.registry import MODELS
@@ -18,7 +18,7 @@ from .base_decoder import BaseDecoder
 class ABILanguageDecoder(BaseDecoder):
     r"""Transformer-based language model responsible for spell correction.
     Implementation of language model of \
-        `ABINet <https://arxiv.org/pdf/2103.06495>`_.
+        `ABINet <https://arxiv.org/abs/1910.04396>`_.
 
     Args:
         dictionary (dict or :obj:`Dictionary`): The config for `Dictionary` or
@@ -195,9 +195,9 @@ class ABILanguageDecoder(BaseDecoder):
         return out
 
     @staticmethod
-    def _get_location_mask(seq_len: int,
-                           device: Union[Optional[torch.device],
-                                         str] = None) -> torch.Tensor:
+    def _get_location_mask(
+            seq_len: int,
+            device: Union[Optional[torch.device], str] = None) -> torch.Tensor:
         """Generate location masks given input sequence length.
 
         Args:

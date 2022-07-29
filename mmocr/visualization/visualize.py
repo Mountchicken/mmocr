@@ -603,7 +603,7 @@ def draw_texts_by_pil(img,
         dirname, _ = os.path.split(os.path.abspath(__file__))
         font_path = os.path.join(dirname, 'font.TTF')
         if not os.path.exists(font_path):
-            url = ('https://download.openmmlab.com/mmocr/data/font.TTF')
+            url = ('https://download.openmmlab.com/mmocr.structures/font.TTF')
             print(f'Downloading {url} ...')
             local_filename, _ = urllib.request.urlretrieve(url)
             shutil.move(local_filename, font_path)
@@ -794,9 +794,10 @@ def draw_edge_result(img, result, edge_thresh=0.5, keynode_thresh=0.5):
                 tmp_img[:new_h, :new_w] = pred_edge_img
                 pred_edge_img = tmp_img
                 new_h += dist_pair_to_pair
-            pred_edge_img = cv2.arrowedLine(pred_edge_img, pos_current,
-                                            (bbox_x1 + dist_key_to_value - 5,
-                                             bbox_y1 + 10), arrow_color, 1)
+            pred_edge_img = cv2.arrowedLine(
+                pred_edge_img, pos_current,
+                (bbox_x1 + dist_key_to_value - 5, bbox_y1 + 10), arrow_color,
+                1)
             score_pos_x = int(
                 (pos_current[0] + bbox_x1 + dist_key_to_value - 5) / 2.)
             score_pos_y = int((pos_current[1] + bbox_y1 + 10) / 2.)
