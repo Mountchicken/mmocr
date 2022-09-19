@@ -17,7 +17,7 @@ class TPStransform(nn.Module):
     This was partially adapted from https://github.com/ayumiymk/aster.pytorch
     Args:
         output_image_size (tuple[int, int]): The size of the output image.
-            Defaults to (32, 128).
+            Defaults to (32, 100).
         num_control_points (int): The number of control points. Defaults to 20.
         margins (tuple[float, float]): The margins for control points to the
             top and down side of the image. Defaults to [0.05, 0.05].
@@ -150,8 +150,7 @@ class TPStransform(nn.Module):
             self, num_control_points: torch.Tensor,
             margins: Tuple[float, float]) -> torch.Tensor:
         """Build the output control points.
-        The output points will be fix at
-        top and down side of the image.
+        The output points will be fix at top and down side of the image.
         Args:
             num_control_points (Tensor): The number of control points.
             margins (Tuple[float, float]): The margins for control points to
@@ -167,8 +166,6 @@ class TPStransform(nn.Module):
         ctrl_pts_y_bottom = np.ones(num_ctrl_pts_per_side) * (1.0 - margin_y)
         ctrl_pts_top = np.stack([ctrl_pts_x, ctrl_pts_y_top], axis=1)
         ctrl_pts_bottom = np.stack([ctrl_pts_x, ctrl_pts_y_bottom], axis=1)
-        # ctrl_pts_top = ctrl_pts_top[1:-1,:]
-        # ctrl_pts_bottom = ctrl_pts_bottom[1:-1,:]
         output_ctrl_pts_arr = np.concatenate([ctrl_pts_top, ctrl_pts_bottom],
                                              axis=0)
         output_ctrl_pts = torch.Tensor(output_ctrl_pts_arr)

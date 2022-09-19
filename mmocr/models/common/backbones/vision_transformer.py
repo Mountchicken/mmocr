@@ -14,6 +14,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 from timm.models.layers import DropPath, to_2tuple, trunc_normal_
 
+from mmocr.registry import MODELS
+
 
 class Mlp(nn.Module):
 
@@ -276,6 +278,7 @@ class RelativePositionBias(nn.Module):
             2, 0, 1).contiguous()  # nH, Wh*Ww, Wh*Ww
 
 
+@MODELS.register_module()
 class VisionTransformer(nn.Module):
     """ Vision Transformer with support for patch or hybrid CNN input stage
     """
@@ -317,7 +320,7 @@ class VisionTransformer(nn.Module):
         self.cls_token = nn.Parameter(torch.zeros(1, 1, embed_dim))
         if use_abs_pos_emb:
             self.pos_embed = nn.Parameter(
-                torch.zeros(1, num_patches + 1, embed_dim))
+                torch.zeros(1, num_patches, embed_dim))
         else:
             self.pos_embed = None
         self.pos_drop = nn.Dropout(p=drop_rate)
@@ -408,9 +411,9 @@ class VisionTransformer(nn.Module):
         x = self.patch_embed(x)
         batch_size, seq_len, _ = x.size()
 
-        cls_tokens = self.cls_token.expand(
-            batch_size, -1, -1)  # stole cls_tokens impl from Phil Wang, thanks
-        x = torch.cat((cls_tokens, x), dim=1)
+        # cls_tokens = self.cls_token.expand(
+        #     batch_size, -1, -1)  # stole cls_tokens impl from Phil Wang, thanks
+        # x = torch.cat((cls_tokens, x), dim=1)
         if self.pos_embed is not None:
             x = x + self.pos_embed
         x = self.pos_drop(x)
@@ -422,10 +425,11 @@ class VisionTransformer(nn.Module):
 
         x = self.norm(x)
         if self.fc_norm is not None:
-            t = x[:, 1:, :]
-            return self.fc_norm(t.mean(1))
+            return self.fc_norm(x.mean(1))
         else:
-            return x[:, 0]
+            # change x form (B, T, C) to (B, C, T)
+            x = x.permute(0, 2, 1)
+            return x
 
     def forward(self, x):
         x = self.forward_features(x)
@@ -433,24 +437,12 @@ class VisionTransformer(nn.Module):
         return x
 
 
-def build_vit(config):
+if __name__ == '__main__':
+    img = torch.rand(3, 3, 32, 128)
     model = VisionTransformer(
-        img_size=config.DATA.IMG_SIZE,
-        patch_size=config.MODEL.VIT.PATCH_SIZE,
-        in_chans=config.MODEL.VIT.IN_CHANS,
-        num_classes=config.MODEL.NUM_CLASSES,
-        embed_dim=config.MODEL.VIT.EMBED_DIM,
-        depth=config.MODEL.VIT.DEPTH,
-        num_heads=config.MODEL.VIT.NUM_HEADS,
-        mlp_ratio=config.MODEL.VIT.MLP_RATIO,
-        qkv_bias=config.MODEL.VIT.QKV_BIAS,
-        drop_rate=config.MODEL.DROP_RATE,
-        drop_path_rate=config.MODEL.DROP_PATH_RATE,
-        norm_layer=partial(nn.LayerNorm, eps=1e-6),
-        init_values=config.MODEL.VIT.INIT_VALUES,
-        use_abs_pos_emb=config.MODEL.VIT.USE_APE,
-        use_rel_pos_bias=config.MODEL.VIT.USE_RPB,
-        use_shared_rel_pos_bias=config.MODEL.VIT.USE_SHARED_RPB,
-        use_mean_pooling=config.MODEL.VIT.USE_MEAN_POOLING)
-
-    return
+        img_size=(32, 128),
+        patch_size=(16, 8),
+        in_chans=3,
+        num_classes=0,
+        use_mean_pooling=False)
+    print(model(img).shape)

@@ -6,4 +6,5 @@ from .encoders import *  # NOQA
 from .module_losses import *  # NOQA
 from .plugins import *  # NOQA
 from .postprocessors import *  # NOQA
+from .preprocessors import *  # NOQA
 from .recognizers import *  # NOQA
