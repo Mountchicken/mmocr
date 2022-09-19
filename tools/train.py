@@ -14,10 +14,7 @@ from mmocr.utils import register_all_modules
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a model')
-    parser.add_argument(
-        '--config',
-        default='configs/textrecog/union4m_baselines/resnet45_10e_union4m.py',
-        help='Train config file path')
+    parser.add_argument('config', help='Train config file path')
     parser.add_argument('--work-dir', help='The dir to save logs and models')
     parser.add_argument(
         '--resume', action='store_true', help='Whether to resume checkpoint.')

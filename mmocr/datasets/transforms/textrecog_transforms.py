@@ -251,3 +251,41 @@ class PadToWidth(BaseTransform):
         repr_str += f'(width={self.width}, '
         repr_str += f'pad_cfg={self.pad_cfg})'
         return repr_str
+
+
+@TRANSFORMS.register_module()
+class Verticle2Horizontal(BaseTransform):
+    """Randomly rotate 90 degrees clockwise to change the vertical image to a
+    horizontal image.
+
+    Required Keys:
+
+    - img
+
+    Modified Keys:
+
+    - img
+    - img_shape
+    """
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def transform(self, results: Dict) -> Dict:
+        """Call function to rotate images.
+
+        Args:
+            results (dict): Result dict from loading pipeline.
+
+        Returns:
+            dict: Updated result dict.
+        """
+        ori_height, ori_width = results['img'].shape[:2]
+        if ori_height > 2 * ori_width:
+            results['img'] = results['img'].transpose(1, 0, 2)
+            results['img_shape'] = results['img'].shape
+        return results
+
+    def __repr__(self) -> str:
+        repr_str = self.__class__.__name__
+        return repr_str

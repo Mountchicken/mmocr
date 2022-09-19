@@ -49,6 +49,7 @@ train_pipeline = [
         ignore_empty=True,
         min_size=0),
     dict(type='LoadOCRAnnotations', with_text=True),
+    dict(type='Verticle2Horizontal'),
     dict(type='Resize', scale=(256, 64), keep_ratio=False),
     dict(
         type='PackTextRecogInputs',
@@ -57,6 +58,7 @@ train_pipeline = [
 
 test_pipeline = [
     dict(type='LoadImageFromFile', file_client_args=file_client_args),
+    dict(type='Verticle2Horizontal'),
     dict(type='Resize', scale=(256, 64), keep_ratio=False),
     # add loading annotation after ``Resize`` because ground truth
     # does not need to do resize data transform

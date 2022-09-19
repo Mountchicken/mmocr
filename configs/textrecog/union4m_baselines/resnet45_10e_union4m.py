@@ -27,12 +27,16 @@ train_list = [
     _base_.union4m_train_simple
 ]
 test_list = [
-    _base_.cute80_rec_test, _base_.iiit5k_rec_test, _base_.svt_rec_test,
-    _base_.svtp_rec_test, _base_.ic13_rec_test, _base_.ic15_rec_test,
-    _base_.union4m_test_gn, _base_.union4m_test_ts_art,
-    _base_.union4m_test_ts_curve, _base_.union4m_test_ts_fcos,
-    _base_.union4m_test_ts_honest, _base_.union4m_test_ts_honest_ori,
-    _base_.union4m_test_ts_meanless, _base_.union4m_test_ts_multi,
+    # _base_.cute80_rec_test, _base_.iiit5k_rec_test, _base_.svt_rec_test,
+    # _base_.svtp_rec_test, _base_.ic13_rec_test, _base_.ic15_rec_test,
+    _base_.union4m_test_gn,
+    _base_.union4m_test_ts_art,
+    _base_.union4m_test_ts_curve,
+    _base_.union4m_test_ts_fcos,
+    _base_.union4m_test_ts_honest,
+    _base_.union4m_test_ts_honest_ori,
+    _base_.union4m_test_ts_meanless,
+    _base_.union4m_test_ts_multi,
     _base_.union4m_test_ts_multi_oriented
 ]
 
@@ -62,8 +66,7 @@ test_dataloader = dict(
 val_dataloader = test_dataloader
 
 val_evaluator = dict(dataset_prefixes=[
-    'CUTE80', 'IIIT5K', 'SVT', 'SVTP', 'IC13', 'IC15', 'Union4M_GN',
-    'Union4M_TS_ART', 'Union4M_TS_CURVE', 'Union4M_TS_FCOS',
+    'Union4M_GN', 'Union4M_TS_ART', 'Union4M_TS_CURVE', 'Union4M_TS_FCOS',
     'Union4M_TS_HONEST', 'Union4M_TS_HONEST_ORI', 'Union4M_TS_MEANLESS',
     'Union4M_TS_MULTI', 'Union4M_TS_MULTI_ORIENTED'
 ])
